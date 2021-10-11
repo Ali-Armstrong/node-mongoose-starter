@@ -6,4 +6,10 @@ module.exports = {
   port: process.env.PORT,
   env: process.env.ZI_ENV,
   databaseURI: process.env.MONGO_URI,
+  auth: {
+    issuer: process.env.AUTH_ISS,
+    audience: process.env.AUTH_AUD,
+    expiresIn: 	"12h",
+    algorithm: 	"HS256"
+  }
 }

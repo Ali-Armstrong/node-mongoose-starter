@@ -60,6 +60,18 @@ exports.signup = async (user) => {
 exports.signin = async (user) => {
 
     //Get user details
+    const userDetails = await User.findOne({
+        email: user.email
+    }).lean().exec();
+
+    if(!userDetails){
+        return "Invalid Email"
+    }
 
     //compare pasword hash
+    const isValidPass = await cryptoUtils.verifyHash(user.password, userDetails.hash);
+    if(isValidPass){
+        //generate jwt token
+    }
+    return "Invalid Password"
 }
