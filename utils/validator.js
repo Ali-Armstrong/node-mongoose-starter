@@ -1,11 +1,14 @@
 const Ajv = require("ajv");
 const ajv = new Ajv({ allErrors: true, removeAdditional: false });
-const userSchema = require("../schemas/users.schema");
-ajv.addSchema(userSchema, "new-user");
+const UserSchema = require("../schemas/users.schema");
+const { SignInSchema, SignUpSchema } = require("../schemas/auth.schema");
+ajv.addSchema(UserSchema, "new-user");
+ajv.addSchema(SignUpSchema, "signup");
+ajv.addSchema(SignInSchema, "signin");
 
 /**
- * Format error responses
- * @param  {Object} schemaErrors - array of json-schema errors, describing each validation failure
+ * @desc Format error responses
+ * @param {Object} schemaErrors - array of json-schema errors, describing each validation failure
  * @return {String} formatted api response
  */
 function errorResponse(schemaErrors) {
@@ -16,15 +19,16 @@ function errorResponse(schemaErrors) {
         };
     });
     return {
-        status: "failed",
-        errors: errors,
-    };
+        success: false,
+        code: 400,
+        errors
+    };;
 }
 
 /**
- * Validates incoming request bodies against the given schema,
- * providing an error response when validation fails
- * @param  {String} schemaName - name of the schema to validate
+ * @desc Validates incoming request bodies against the given schema,
+ *       providing an error response when validation fails
+ * @param {String} schemaName - name of the schema to validate
  * @return {Object} response
  */
 const validateSchema = (schemaName) => {

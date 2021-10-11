@@ -1,8 +1,5 @@
 //this file contains some common schema definations
-import mongoose from "mongoose";
-const { Schema } = mongoose;
-
-const MetaInfo = new Schema({
+const MetaInfo = {
     createdAt: {
         type: Number
     },
@@ -21,7 +18,7 @@ const MetaInfo = new Schema({
     deletedBy: {
         type : String
     }
-})
+}
 
 module.exports = {
     MetaInfo,
