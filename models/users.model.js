@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
-import { MetaInfo } from "./common.model";
+const { MetaInfo } = require("./common.model");
 
 const UserSchema = new Schema({
     userId: { //nanoid
@@ -28,8 +28,7 @@ const UserSchema = new Schema({
         required: true
     },
     calenderLink: {
-        type: String,
-        required: true
+        type: String
     },
     orgInfo: {
         orgId: {

@@ -5,16 +5,16 @@ exports.UserSchema = {
     required : ["email","calendarLink","password"],
     properties : {
         name: {
-            type: String
+            type: "string"
         },
         password: {
-            type: String
+            type: "string"
         },
         email: {
-            type: String
+            type: "string"
         },
         calendarLink: {
-            type: String,
+            type: "string",
         }
     }
 }

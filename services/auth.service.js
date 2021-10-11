@@ -1,23 +1,24 @@
 const User = require("../models/users.model");
 const Org = require("../models/org.model");
 const cryptoUtils = require('../utils/cryptoUtils');
-import { nanoid } from 'nanoid'
-const restrictedDomains = [null, '', 'gmail.com'];
+const { sign } = require("../utils/jwt");
+const nanoid = require('../utils/nanoid');
+const restrictedDomains = [null, undefined, '', 'gmail.com'];
 
-exports.signup = async (user) => {
+exports.signup = async (body) => {
     //check if user already exists
     const user = await User.findOne({
-        email: user.email
+        email: body.email
     }).lean().exec();
 
     if(user){
         return "user already exists"
     }else{
         //generate password hash
-        const hash = await cryptoUtils.generateHash(user.password);
+        const hash = await cryptoUtils.generateHash(body.password);
 
         //create org if not exists
-        const domain = user.email.split('@')[1];
+        const domain = body.email.split('@')[1];
         if(restrictedDomains.includes(domain)){
             return "not allowed"
         }
@@ -39,12 +40,12 @@ exports.signup = async (user) => {
         }else{
             orgId = org.orgId
         }
-
+        const userId = nanoid();
         //add new user with org details
         const newUser = new User({
-            name: user.name,
-            email: user.email,
-            userId: nanoid(),
+            userId,
+            name: body.name || body.email,
+            email: body.email,
             pass: hash,
             isActive: true,
             orgInfo: {
@@ -52,13 +53,17 @@ exports.signup = async (user) => {
                 orgName: domain,
             }
         });
-        const resp = await newUser.save();
-        return resp;
+        await newUser.save();
+        //generate jwt token
+        const token = await sign(
+            {email: body.email},
+            {subject: userId}
+        );
+        return token;
     }
 }
 
 exports.signin = async (user) => {
-
     //Get user details
     const userDetails = await User.findOne({
         email: user.email
@@ -67,11 +72,16 @@ exports.signin = async (user) => {
     if(!userDetails){
         return "Invalid Email"
     }
-
+    
     //compare pasword hash
-    const isValidPass = await cryptoUtils.verifyHash(user.password, userDetails.hash);
+    const isValidPass = await cryptoUtils.verifyHash(user.password, userDetails.pass);
     if(isValidPass){
         //generate jwt token
+        const token = await sign(
+            {email: user.email},
+            {subject: userDetails.userId}
+        );
+        return token;
     }
     return "Invalid Password"
 }

@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
-import { MetaInfo } from "./common.model";
+const { MetaInfo } = require("./common.model");
 
 const OrgSchema = new Schema({
     orgId: { //nanoid

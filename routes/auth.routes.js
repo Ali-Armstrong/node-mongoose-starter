@@ -10,7 +10,7 @@ const validateSchema = require("../utils/validator");
  * @param {username,password} body - body contains username and password
  * @returns {token} authorization token
  */
-router.post("/signup", validateSchema("signup"), function (req, res) {
+router.post("/signup", validateSchema("signup"), async function (req, res) {
     try {
         const response = await authService.signup(req.body);
         res.json(success("ok", response, 200));
@@ -25,11 +25,15 @@ router.post("/signup", validateSchema("signup"), function (req, res) {
  * @param {username,password} body - body contains username and password
  * @returns {token} authorization token
  */
-router.post("/login", validateSchema("signin"), function (req, res) {
+router.post("/login", validateSchema("signin"), async function (req, res) {
     try {
-        authService.signin(req.body);
+        const token = await authService.signin(req.body);
+        res.json(success("ok", token, 200));
     } catch (err) {
         logger.error(err);
         res.json(error("Something went wrong", 500));
     }
 });
+
+module.exports = router;
+

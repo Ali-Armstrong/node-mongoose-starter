@@ -11,6 +11,7 @@ const logger = require('./utils/logger');
 const pjson = require('./package.json');
 
 const UserRoutes = require('./routes/users.routes');
+const AuthRoutes = require("./routes/auth.routes");
 
 
 //app settings
@@ -23,6 +24,8 @@ app.use(bodyParser.urlencoded({
 app.use(morgan('combined'));
 
 //setup routes
+app.use('/auth', AuthRoutes)
+app.use('/users', UserRoutes);
 //health check api
 app.use('/', (req,res) => {
     res.send({
@@ -31,7 +34,6 @@ app.use('/', (req,res) => {
         environment : config.env
     })
 });
-app.use('/users',UserRoutes);
 
 
 app.listen(config.port, ()=>{

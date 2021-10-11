@@ -4,10 +4,10 @@ const SignUpSchema = {
     required : ["email","password"],
     properties : {
         password: {
-            type: String
+            type: "string"
         },
         email: {
-            type: String
+            type: "string"
         }
     }
 }
@@ -17,10 +17,10 @@ const SignInSchema = {
     required : ["email","password"],
     properties : {
         password: {
-            type: String
+            type: "string"
         },
         email: {
-            type: String
+            type: "string"
         }
     }
 }
