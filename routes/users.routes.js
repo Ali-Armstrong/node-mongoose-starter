@@ -2,6 +2,7 @@ const express = require("express");
 const logger = require("../utils/logger");
 const router = express.Router();
 const userService = require("../services/users.service");
+const { success, error } = require("../utils/responses");
 const validateSchema = require("../utils/validator");
 
 /**
@@ -32,11 +33,15 @@ router.get("/:id", function (req, res) {
  * @desc    Check if calendar-name is already taken for calendar link
  * @param   {domain} domain - a path param, which is user given calendar link
  */
-router.get("/isAvailable/:domain", function (req, res) {
+router.get("/isAvailable/:link", function (req, res) {
     try{
-
+        if(userService.isLinkAvailable(req.params.link)){
+            return res.json(success("ok", {available : true}, 200));
+        }
+        return res.json(success("ok", {available : false}, 200));
     }catch(err){
-        logger.error(err)
+        logger.error(err);
+        return res.json(error("Something went wrong", 500));
     }
 });
 

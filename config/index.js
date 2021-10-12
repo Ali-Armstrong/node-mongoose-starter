@@ -10,6 +10,6 @@ module.exports = {
     issuer: process.env.AUTH_ISS,
     audience: process.env.AUTH_AUD,
     expiresIn: 	"12h",
-    algorithm: 	"HS256"
+    algorithm: 	"RS256"
   }
 }

@@ -9,7 +9,10 @@ const config = require('./config/index');
 const db = require('./utils/db');
 const logger = require('./utils/logger');
 const pjson = require('./package.json');
+const jwt = require("./utils/jwt");
+const { success, error } = require("./utils/responses");
 
+const v1 = express.Router();
 const UserRoutes = require('./routes/users.routes');
 const AuthRoutes = require("./routes/auth.routes");
 
@@ -23,9 +26,28 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(morgan('combined'));
 
+const isAuthorized = (req, res, next) => {
+    const token = req.body.token || req.query.token || req.headers["x-access-token"];
+  
+    if (!token) {
+        return res.json(error("Token Required", 403));
+    }
+    try {
+        const decoded = jwt.verify(token, {});
+        req.user = decoded;
+    } catch (err) {
+        logger.error(err)
+        return res.json(error("Invalid Token", 401));
+    }
+    return next();
+};
+
 //setup routes
-app.use('/auth', AuthRoutes)
-app.use('/users', UserRoutes);
+v1.use('/auth', AuthRoutes)
+v1.use('/users', isAuthorized, UserRoutes);
+app.use('/v1', v1);
+//app.use('/', v1); // Set the default version to latest.
+
 //health check api
 app.use('/', (req,res) => {
     res.send({
@@ -33,6 +55,11 @@ app.use('/', (req,res) => {
         version : pjson.version,
         environment : config.env
     })
+});
+
+//Capture All 404 errors
+app.use('*', function (req,res,next){
+    return res.json(error("Resource Not Found", 404));
 });
 
 

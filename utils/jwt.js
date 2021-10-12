@@ -38,12 +38,11 @@ exports.verify = (token, opts) => {
     const verifyOpts = {
         issuer: opts.issuer || options.issuer,
         audience: opts.audience || options.audience,
-        subject: opts.subject,
         expiresIn: opts.expiresIn || options.expiresIn,
-        algorithm: opts.algorithm || options.algorithm
+        algorithms: [options.algorithm]
     }
-
-    return jwt.verify(token, publicKEY, verifyOpts);
+    //console.log(token.toString(), {algorithms: [options.algorithm]}, publicKEY)
+    return jwt.verify(token.toString(), publicKEY.toString(), verifyOpts);
 }
 
 /**
