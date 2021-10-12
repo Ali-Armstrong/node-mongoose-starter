@@ -13,10 +13,10 @@ const validateSchema = require("../utils/validator");
 router.post("/signup", validateSchema("signup"), async function (req, res) {
     try {
         const response = await authService.signup(req.body);
-        return res.json(success("ok", response, 200));
+        return success(res, "ok", response, 200);
     } catch (err) {
         logger.error(err);
-        return res.json(error("Something went wrong", 500));
+        return error(res, "Something went wrong", 500);
     }
 });
 
@@ -28,12 +28,11 @@ router.post("/signup", validateSchema("signup"), async function (req, res) {
 router.post("/login", validateSchema("signin"), async function (req, res) {
     try {
         const token = await authService.signin(req.body);
-        return res.json(success("ok", token, 200));
+        return success(res, "ok", token, 200);
     } catch (err) {
         logger.error(err);
-        return res.json(error("Something went wrong", 500));
+        return error(res, "Something went wrong", 500);
     }
 });
 
 module.exports = router;
-

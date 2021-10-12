@@ -30,14 +30,14 @@ const isAuthorized = (req, res, next) => {
     const token = req.body.token || req.query.token || req.headers["x-access-token"];
   
     if (!token) {
-        return res.json(error("Token Required", 403));
+        return error(res, "Token Required", 403);
     }
     try {
         const decoded = jwt.verify(token, {});
         req.user = decoded;
     } catch (err) {
         logger.error(err)
-        return res.json(error("Invalid Token", 401));
+        return error(res, "Invalid Token", 401);
     }
     return next();
 };
@@ -49,7 +49,7 @@ app.use('/v1', v1);
 //app.use('/', v1); // Set the default version to latest.
 
 //health check api
-app.use('/', (req,res) => {
+app.get('/', (req,res) => {
     res.send({
         name : pjson.name,
         version : pjson.version,
@@ -59,7 +59,7 @@ app.use('/', (req,res) => {
 
 //Capture All 404 errors
 app.use('*', function (req,res,next){
-    return res.json(error("Resource Not Found", 404));
+    return error(res, "Resource Not Found", 404);
 });
 
 

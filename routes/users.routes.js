@@ -9,11 +9,11 @@ const validateSchema = require("../utils/validator");
  * @desc    Onboard new user
  * @param   {new-user} body
  */
-router.post("/", validateSchema('new-user'),function (req, res) {
-    try{
+router.post("/", validateSchema("new-user"), function (req, res) {
+    try {
         userService.onBoardUser(req.body);
-    }catch(err){
-        logger.error(err)
+    } catch (err) {
+        logger.error(err);
     }
 });
 
@@ -22,10 +22,9 @@ router.post("/", validateSchema('new-user'),function (req, res) {
  * @param   {id} id - a path param, which is unique user identifier
  */
 router.get("/:id", function (req, res) {
-    try{
-
-    }catch(err){
-        logger.error(err)
+    try {
+    } catch (err) {
+        logger.error(err);
     }
 });
 
@@ -34,14 +33,14 @@ router.get("/:id", function (req, res) {
  * @param   {domain} domain - a path param, which is user given calendar link
  */
 router.get("/isAvailable/:link", function (req, res) {
-    try{
-        if(userService.isLinkAvailable(req.params.link)){
-            return res.json(success("ok", {available : true}, 200));
+    try {
+        if (userService.isLinkAvailable(req.params.link)) {
+            return success(res, "ok", { available: true }, 200);
         }
-        return res.json(success("ok", {available : false}, 200));
-    }catch(err){
+        return success(res, "ok", { available: false }, 200);
+    } catch (err) {
         logger.error(err);
-        return res.json(error("Something went wrong", 500));
+        return error(res, "Something went wrong", 500);
     }
 });
 

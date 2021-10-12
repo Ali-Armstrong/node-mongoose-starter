@@ -4,13 +4,13 @@
  * @param {object | array} results
  * @param {number} statusCode
  */
-exports.success = (message, results, statusCode) => {
-    return {
+exports.success = (res, message, results, statusCode) => {
+    return res.status(statusCode).json({
         message,
         success: true,
         code: statusCode,
         results,
-    };
+    });
 };
 
 /**
@@ -18,13 +18,13 @@ exports.success = (message, results, statusCode) => {
  * @param {string} message
  * @param {number} statusCode
  */
-exports.error = (message, statusCode) => {
+exports.error = (res, message, statusCode) => {
 
     if (!statusCode) statusCode = 500;
 
-    return {
+    return res.status(statusCode).json({
         message,
         success: false,
         code: statusCode
-    };
+    });
 };
