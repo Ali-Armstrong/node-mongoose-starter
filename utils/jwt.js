@@ -1,6 +1,8 @@
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const config = require('../config/index');
+const logger = require('../utils/logger');
+const { error } = require("../utils/responses");
 
 const privateKEY 	= fs.readFileSync('./private.key', 'utf8'); // to sign JWT
 const publicKEY 	= fs.readFileSync('./public.key', 'utf8'); 	// to verify JWT
@@ -28,22 +30,34 @@ exports.sign = (payload, opts) => {
 }
 
 /**
- * @desc verify give token is valid or not
- * @param {String} token 
- * @param {Object} opts 
- * @returns {Boolean}
+ * @desc verify token from request and check if the user authorized or not
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
  */
-exports.verify = (token, opts) => {
-    //override custom options with default options
-    const verifyOpts = {
-        issuer: opts.issuer || options.issuer,
-        audience: opts.audience || options.audience,
-        expiresIn: opts.expiresIn || options.expiresIn,
-        algorithms: [options.algorithm]
+exports.isAuthorized = (req, res, next) => {
+    const token = req.body.token || req.query.token || req.headers["x-access-token"];
+  
+    if (!token) {
+        return error(res, "Token Required", 403);
     }
-    //console.log(token.toString(), {algorithms: [options.algorithm]}, publicKEY)
-    return jwt.verify(token.toString(), publicKEY.toString(), verifyOpts);
-}
+    try {
+        const verifyOpts = {
+            issuer: options.issuer,
+            audience: options.audience,
+            expiresIn: options.expiresIn,
+            algorithms: [options.algorithm]
+        }
+        //console.log(token.toString(), {algorithms: [options.algorithm]}, publicKEY)
+        const decoded = jwt.verify(token.toString(), publicKEY.toString(), verifyOpts);
+        req.user = decoded;
+    } catch (err) {
+        logger.error(err)
+        return error(res, err.message, 401);
+    }
+    return next();
+};
 
 /**
  * @desc decode the given token

@@ -2,6 +2,7 @@ const Ajv = require("ajv");
 const ajv = new Ajv({ allErrors: true, removeAdditional: false });
 const UserSchema = require("../schemas/users.schema");
 const { SignInSchema, SignUpSchema } = require("../schemas/auth.schema");
+const { error } = require("../utils/responses");
 ajv.addSchema(UserSchema, "new-user");
 ajv.addSchema(SignUpSchema, "signup");
 ajv.addSchema(SignInSchema, "signin");
@@ -18,11 +19,7 @@ function errorResponse(schemaErrors) {
             message: error.message,
         };
     });
-    return {
-        success: false,
-        code: 400,
-        errors
-    };;
+    return errors
 }
 
 /**
@@ -35,7 +32,7 @@ const validateSchema = (schemaName) => {
     return (req, res, next) => {
         let valid = ajv.validate(schemaName, req.body);
         if (!valid) {
-            return res.send(errorResponse(ajv.errors));
+            return error(res, errorResponse(ajv.errors), 400);
         }
         next();
     };
