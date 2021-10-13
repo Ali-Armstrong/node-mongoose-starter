@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const cryptoUtils = require("../utils/cryptoUtils");
 const { MetaInfo } = require("./common.model");
 
 const UserSchema = new Schema({
-    userId: { //nanoid
+    _id : {
         type: String,
-        required: true
+        default: mongoose.Types.ObjectId().toString()
     },
     metaInfo: MetaInfo,
     name: {
@@ -27,20 +28,17 @@ const UserSchema = new Schema({
         type: Boolean,
         required: true
     },
-    calenderLink: {
-        type: String
-    },
-    orgInfo: {
-        orgId: {
-            type: String
-        },
-        orgName: {
-            type: String
-        }
+    lastSignIn: {
+        type: Number
     }
 },{
     timestamps: { createdAt: 'metaInfo.createdAt', updatedAt: 'metaInfo.updatedAt' },
     collection : 'users'
 });
+
+UserSchema.methods.generatePasswordReset = function() {
+    this.resetPasswordToken = cryptoUtils.generateResetToken();
+    this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
+};
 
 module.exports = mongoose.model('Users', UserSchema);

@@ -37,8 +37,8 @@ exports.sign = (payload, opts) => {
  * @returns 
  */
 exports.isAuthorized = (req, res, next) => {
-    const token = req.body.token || req.query.token || req.headers["x-access-token"];
-  
+    const [type, token] = req.headers["authorization"].split(' ');
+
     if (!token) {
         return error(res, "Token Required", 403);
     }
@@ -51,7 +51,7 @@ exports.isAuthorized = (req, res, next) => {
         }
         //console.log(token.toString(), {algorithms: [options.algorithm]}, publicKEY)
         const decoded = jwt.verify(token.toString(), publicKEY.toString(), verifyOpts);
-        req.user = decoded;
+        req.authInfo = decoded;
     } catch (err) {
         logger.error(err)
         return error(res, err.message, 401);

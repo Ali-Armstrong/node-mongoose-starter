@@ -1,11 +1,14 @@
 const Ajv = require("ajv");
 const ajv = new Ajv({ allErrors: true, removeAdditional: false });
-const UserSchema = require("../schemas/users.schema");
-const { SignInSchema, SignUpSchema } = require("../schemas/auth.schema");
+const { InviteUserSchema, InviteOnboardSchema } = require("../schemas/users.schema");
+const { SignInSchema, SignUpSchema, ResetPasswordSchema } = require("../schemas/auth.schema");
 const { error } = require("../utils/responses");
-ajv.addSchema(UserSchema, "new-user");
 ajv.addSchema(SignUpSchema, "signup");
 ajv.addSchema(SignInSchema, "signin");
+ajv.addSchema(ResetPasswordSchema, 'reset-password');
+ajv.addSchema(InviteUserSchema, 'invite-user');
+ajv.addSchema(InviteOnboardSchema, "onboard-user");
+
 
 /**
  * @desc Format error responses
@@ -15,7 +18,7 @@ ajv.addSchema(SignInSchema, "signin");
 function errorResponse(schemaErrors) {
     let errors = schemaErrors.map((error) => {
         return {
-            path: error.dataPath,
+            path: error.instancePath,
             message: error.message,
         };
     });

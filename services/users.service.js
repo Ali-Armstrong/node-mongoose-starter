@@ -13,3 +13,7 @@ exports.isLinkAvailable = async (link) => {
     }
     return true;
 }
+
+exports.inviteUser = async (user) => {
+    
+}

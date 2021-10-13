@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { MetaInfo } = require("./common.model");
 
-const OrgSchema = new Schema({
+const RoleSchema = new Schema({
     _id: {
         type: String,
         default: mongoose.Types.ObjectId().toString()
@@ -14,13 +14,15 @@ const OrgSchema = new Schema({
         maxlength: 64,
         required: true
     },
-    domain: {
+    orgId: {
         type: String,
-        required: true
+    },
+    scopes: {
+        type: [String]
     }
 },{
     timestamps: { createdAt: 'metaInfo.createdAt', updatedAt: 'metaInfo.updatedAt' },
-    collection : 'organizations'
+    collection : 'org-roles'
 });
 
-module.exports = mongoose.model('Organizations', OrgSchema);
+module.exports = mongoose.model('OrgRoles', RoleSchema);

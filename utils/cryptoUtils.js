@@ -33,3 +33,11 @@ exports.verifyHash = async (password, hash) => {
         });
     })
 }
+
+/**
+ * @desc Generate random token to be used as password reset token
+ * @returns {string}
+ */
+exports.generateResetToken = () => {
+    return crypto.randomBytes(20).toString('hex');
+}

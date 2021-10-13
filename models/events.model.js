@@ -5,7 +5,7 @@ const { MetaInfo } = require("./common.model");
 const EventSchema = new Schema({
     eventId: {
         type: String,
-        required: true
+        required: true,
     },
     metaInfo: MetaInfo,
     userId: {

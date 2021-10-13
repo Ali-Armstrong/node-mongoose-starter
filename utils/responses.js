@@ -23,7 +23,7 @@ exports.error = (res, message, statusCode) => {
     if (!statusCode) statusCode = 500;
 
     return res.status(statusCode).json({
-        message,
+        message: message.trim(),
         success: false,
         code: statusCode
     });

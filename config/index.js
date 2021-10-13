@@ -10,6 +10,7 @@ module.exports = {
     issuer: process.env.AUTH_ISS,
     audience: process.env.AUTH_AUD,
     expiresIn: 	"12h",
-    algorithm: 	"RS256"
+    algorithm: 	"RS256",
+    resetURI: "https://meetin.com/auth/reset" //ui end point
   }
 }
