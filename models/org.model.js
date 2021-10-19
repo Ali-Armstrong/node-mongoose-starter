@@ -5,7 +5,7 @@ const { MetaInfo } = require("./common.model");
 const OrgSchema = new Schema({
     _id: {
         type: String,
-        default: mongoose.Types.ObjectId().toString()
+        required: true
     },
     metaInfo: MetaInfo,
     name: {

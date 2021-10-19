@@ -6,7 +6,7 @@ const { MetaInfo } = require("./common.model");
 const UserSchema = new Schema({
     _id : {
         type: String,
-        default: mongoose.Types.ObjectId().toString()
+        required: true
     },
     metaInfo: MetaInfo,
     name: {
@@ -29,6 +29,12 @@ const UserSchema = new Schema({
         required: true
     },
     lastSignIn: {
+        type: Number
+    },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
         type: Number
     }
 },{

@@ -5,7 +5,7 @@ const { MetaInfo } = require("./common.model");
 const RoleSchema = new Schema({
     _id: {
         type: String,
-        default: mongoose.Types.ObjectId().toString()
+        required: true
     },
     metaInfo: MetaInfo,
     name: {

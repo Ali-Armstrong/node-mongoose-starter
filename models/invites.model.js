@@ -4,7 +4,8 @@ const { MetaInfo } = require("./common.model");
 
 const InviteSchema = new Schema({
     _id: {
-        type: String
+        type: String,
+        required: true
     },
     metaInfo: MetaInfo,
     inviterInfo: {
@@ -16,24 +17,31 @@ const InviteSchema = new Schema({
         }
     },
     inviteeInfo: {
-        id: {
+        role: {
             type: String
         },
         email: {
             type: String
         }
     },
+    orgInfo: {
+        id: {
+            type: String
+        },
+        name: {
+            type: String
+        }
+    },
     inviteToken: {
         type: String,
-        required: true
     },
-    inviteTokenExpiry: {
+    inviteTokenExpires: {
         type: Number,
-        required: true
     },
     status: {
         type: String,
-        enum: ["sent", "accepted", "signed-up"]
+        enum: ["sent", "verified", "signed-up"],
+        default: "sent"
     }
 
 },{

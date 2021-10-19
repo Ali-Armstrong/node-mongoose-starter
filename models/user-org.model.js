@@ -5,7 +5,7 @@ const { MetaInfo } = require("./common.model");
 const UserOrg = new Schema({
     _id: {
         type: String,
-        default: mongoose.Types.ObjectId().toString()
+        required: true
     },
     metaInfo: MetaInfo,
     userId: {
@@ -14,13 +14,13 @@ const UserOrg = new Schema({
     orgId: {
         type: String
     },
-    name: {
+    orgName: {
         type: String,
         minlength: 1,
         maxlength: 64,
         required: true
     },
-    email: {
+    userEmail: {
         type: String,
         lowercase: true,
         required: true
@@ -38,6 +38,23 @@ const UserOrg = new Schema({
     role: {
         type: String,
         required: true
+    },
+    confirmToken: {
+        type: String
+    },
+    confirmTokenExpires: {
+        type: Number
+    },
+    onBoardedVia: {
+        type: String,
+        required: true,
+        enum: ["signup", "invite", "signup-confirmation"]
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ["success", "awaiting-confirmation"],
+        default: "success"
     }
 },{
     timestamps: { createdAt: 'metaInfo.createdAt', updatedAt: 'metaInfo.updatedAt' },
